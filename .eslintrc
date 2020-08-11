@@ -1,5 +1,6 @@
 {
   "env": {
+    "node" : true,
     "browser": true,
     "es6": true,
     "jest": true
@@ -9,6 +10,7 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
+  "parser": "babel-eslint",
   "rules": {
     "no-debugger": "error",
     "no-dupe-keys": "warn",
