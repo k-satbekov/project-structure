@@ -25,7 +25,7 @@ export default class Page {
         <div class="category category_open" data-id="${category.id}">
           <header class="category__header">${category.title}</header>
           <div class="category__body">
-            <div class="subcategory-list" data-element="sub-list" data-id="sub-list${index}">
+            <div class="subcategory-list" data-element="sub-list${index}">
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@ export default class Page {
     const subcategoryData = [];
 
     for(const subcategory of category.subcategories) {
-      subcategoryData.push({"title":subcategory.title, "count":subcategory.count});
+      subcategoryData.push({"title":subcategory.title, "count":subcategory.count, "id":subcategory.id});
     }
 
     const list = new SortableList({
@@ -51,15 +51,19 @@ export default class Page {
 
         element.classList.add('categories__sortable-list-item');
         element.setAttribute('data-grab-handle','');
-        element.setAttribute('data-id', `${this.categories[0].subcategories[0].id}`);
+        element.setAttribute('data-id', `${item.id}`);
+        element.setAttribute('style','');
         return element;
       })
     });
 
-    const { categoriesContainer } = this.subElements;
-    const subL = categoriesContainer.querySelector(`[data-id="sub-list${index}"]`);
+    const str = `sub-list${index}`;
+    this.components[str] = list;
 
-    subL.appendChild(list.element);
+    // const { categoriesContainer } = this.subElements;
+    // const subL = categoriesContainer.querySelector(`[data-element="sub-list${index}"]`);
+    //
+    // subL.append(list.element);
   }
 
   async loadCategories() {
@@ -74,6 +78,18 @@ export default class Page {
       categoriesContainer.innerHTML += this.getCategoryRow(category, i);
       this.renderSingleListElement(category, i);
     }
+
+    this.prepareSubElements(this.element);
+    this.renderComponents();
+  }
+
+  renderComponents () {
+    Object.keys(this.components).forEach(component => {
+      const root = this.subElements[component];
+      const { element } = this.components[component];
+
+      root.append(element);
+    });
   }
 
   async render() {
